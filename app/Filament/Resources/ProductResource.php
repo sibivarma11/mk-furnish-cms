@@ -74,7 +74,8 @@ class ProductResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('category')
+                    ->options(fn() => Product::distinct()->pluck('category', 'category')->toArray()),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
