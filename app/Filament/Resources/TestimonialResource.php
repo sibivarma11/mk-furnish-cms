@@ -29,6 +29,12 @@ class TestimonialResource extends Resource
                 Forms\Components\TextInput::make('role')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('rating')
+                    ->numeric()
+                    ->minValue(1)
+                    ->maxValue(5)
+                    ->default(5)
+                    ->required(),
                 Forms\Components\Textarea::make('content')
                     ->required()
                     ->columnSpanFull(),
@@ -57,6 +63,9 @@ class TestimonialResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('role')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('rating')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\ImageColumn::make('image_preview')
                     ->label('Image')
                     ->state(function ($record) {

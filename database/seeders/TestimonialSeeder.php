@@ -72,6 +72,7 @@ class TestimonialSeeder extends Seeder
                 [
                     'name' => $testimonial['name'],
                     'role' => $testimonial['role'],
+                    'rating' => 5,
                     'content' => $testimonial['content'],
                     'image' => $imageContent,
                 ]
