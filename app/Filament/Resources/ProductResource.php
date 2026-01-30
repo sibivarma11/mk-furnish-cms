@@ -28,7 +28,18 @@ class ProductResource extends Resource
                     ->maxLength(255),
                 Forms\Components\TextInput::make('category')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->rules([
+                        fn(Forms\Get $get, ?Product $record): \Closure => function (string $attribute, $value, \Closure $fail) use ($record) {
+                            $count = Product::where('category', $value)
+                                ->when($record, fn($query) => $query->where('id', '!=', $record->id))
+                                ->count();
+
+                            if ($count >= 15) {
+                                $fail("The category \"{$value}\" already has the maximum limit of 15 products.");
+                            }
+                        },
+                    ]),
                 Forms\Components\Textarea::make('description')
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image_file')
@@ -78,7 +89,9 @@ class ProductResource extends Resource
                     ->options(fn() => Product::distinct()->pluck('category', 'category')->toArray()),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
